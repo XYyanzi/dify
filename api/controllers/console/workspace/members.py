@@ -17,6 +17,7 @@ from libs.login import login_required
 from models.account import Account, TenantAccountRole
 from services.account_service import RegisterService, TenantService
 from services.errors.account import AccountAlreadyInTenantError
+from services.tag_service import TagService
 
 
 class MemberListApi(Resource):
@@ -28,6 +29,9 @@ class MemberListApi(Resource):
     @marshal_with(account_with_role_list_fields)
     def get(self):
         members = TenantService.get_tenant_members(current_user.current_tenant)
+        for member in members:
+            tags = TagService.get_tags_by_target_id("app", current_user.current_tenant_id, member.id)
+            member.tags = tags
         return {"result": "success", "accounts": members}, 200
 
 

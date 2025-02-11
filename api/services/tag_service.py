@@ -6,6 +6,7 @@ from sqlalchemy import func
 from werkzeug.exceptions import NotFound
 
 from extensions.ext_database import db
+from models import Account
 from models.dataset import Dataset
 from models.model import App, Tag, TagBinding
 
@@ -152,7 +153,12 @@ class TagService:
                 .filter(App.tenant_id == current_user.current_tenant_id, App.id == target_id)
                 .first()
             )
-            if not app:
-                raise NotFound("App not found")
+            account = (
+                db.session.query(Account)
+                .filter(Account.id == target_id)
+                .first()
+            )
+            if not app and not account:
+                raise NotFound("App or account not found")
         else:
             raise NotFound("Invalid binding type")

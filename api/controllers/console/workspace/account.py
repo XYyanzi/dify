@@ -24,6 +24,7 @@ from models import AccountIntegrate, InvitationCode
 from services.account_service import AccountService
 from services.billing_service import BillingService
 from services.errors.account import CurrentPasswordIncorrectError as ServiceCurrentPasswordIncorrectError
+from services.tag_service import TagService
 
 
 class AccountInitApi(Resource):
@@ -83,6 +84,8 @@ class AccountProfileApi(Resource):
     @marshal_with(account_fields)
     @enterprise_license_required
     def get(self):
+        tags = TagService.get_tags_by_target_id("app", current_user.current_tenant_id, current_user.id)
+        current_user.tags = tags
         return current_user
 
 

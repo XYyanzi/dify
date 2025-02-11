@@ -21,6 +21,7 @@ import { Plan } from '@/app/components/billing/type'
 import UpgradeBtn from '@/app/components/billing/upgrade-btn'
 import { NUM_INFINITE } from '@/app/components/billing/config'
 import { LanguagesSupported } from '@/i18n/language'
+import TagSelector from '@/app/components/base/tag-management/selector'
 dayjs.extend(relativeTime)
 
 const MembersPage = () => {
@@ -89,6 +90,7 @@ const MembersPage = () => {
             <div className='grow px-3 system-xs-medium-uppercase text-text-tertiary'>{t('common.members.name')}</div>
             <div className='shrink-0 w-[104px] system-xs-medium-uppercase text-text-tertiary'>{t('common.members.lastActive')}</div>
             <div className='shrink-0 w-[96px] px-3 system-xs-medium-uppercase text-text-tertiary'>{t('common.members.role')}</div>
+            <div className='shrink-0 w-[150px] px-3 system-xs-medium-uppercase text-text-tertiary'>{t('common.tag.placeholder')}</div>
           </div>
           <div className='min-w-[480px] relative'>
             {
@@ -111,6 +113,33 @@ const MembersPage = () => {
                       ((isCurrentWorkspaceOwner && account.role !== 'owner') || (isCurrentWorkspaceManager && !['owner', 'admin'].includes(account.role)))
                         ? <Operation member={account} operatorRole={currentWorkspace.role} onOperate={mutate} />
                         : <div className='px-3 system-xs-regular text-text-secondary'>{RoleMap[account.role] || RoleMap.normal}</div>
+                    }
+                  </div>
+                  <div className='shrink-0 w-[150px] flex items-center'>
+                    {
+                      ((isCurrentWorkspaceOwner && account.role !== 'owner') || (isCurrentWorkspaceManager && !['owner'].includes(account.role)))
+                        ? <div className='w-[150px]'>
+                          <TagSelector
+                            position='br'
+                            type='app'
+                            targetID={account.id}
+                            value={account.tags.map(tag => tag.id)}
+                            isFolder={true}
+                            selectedTags={account.tags}
+                            onCacheUpdate={(updatedTags) => {
+                              account.tags = updatedTags
+                              mutate()
+                            }}
+                            onChange={mutate}
+                          />
+                        </div>
+                        : <div className='px-3 system-xs-regular text-text-secondary w-[150px]'>
+                          {account.tags.map((tag, index) => (
+                            <span key={tag.id} className='tag'>
+                              {tag.name}{index < account.tags.length - 1 ? ', ' : ''}
+                            </span>
+                          ))}
+                        </div>
                     }
                   </div>
                 </div>

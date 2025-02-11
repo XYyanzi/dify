@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 . "$(dirname -- "$0")/_/husky.sh"
 
+. "$(git rev-parse --show-toplevel)/api/.venv/bin/activate"
 # get the list of modified files
 files=$(git diff --cached --name-only)
 

@@ -3,6 +3,7 @@ from flask_restful import fields  # type: ignore
 from libs.helper import AvatarUrlField, TimestampField
 
 simple_account_fields = {"id": fields.String, "name": fields.String, "email": fields.String}
+simple_tag_fields = {"id": fields.String, "name": fields.String, "type": fields.String}
 
 account_fields = {
     "id": fields.String,
@@ -17,6 +18,7 @@ account_fields = {
     "last_login_at": TimestampField,
     "last_login_ip": fields.String,
     "created_at": TimestampField,
+    "tags": fields.List(fields.Nested(simple_tag_fields)),
 }
 
 account_with_role_fields = {
@@ -30,6 +32,7 @@ account_with_role_fields = {
     "created_at": TimestampField,
     "role": fields.String,
     "status": fields.String,
+    "tags": fields.List(fields.Nested(simple_tag_fields)),
 }
 
 account_with_role_list_fields = {"accounts": fields.List(fields.Nested(account_with_role_fields))}

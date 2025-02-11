@@ -23,6 +23,7 @@ type TagSelectorProps = {
   type: 'knowledge' | 'app'
   value: string[]
   selectedTags: Tag[]
+  isFolder?: boolean
   onCacheUpdate: (tags: Tag[]) => void
   onChange?: () => void
 }
@@ -212,6 +213,7 @@ const TagSelector: FC<TagSelectorProps> = ({
   selectedTags,
   onCacheUpdate,
   onChange,
+  isFolder = false,
 }) => {
   const { t } = useTranslation()
 
@@ -223,10 +225,12 @@ const TagSelector: FC<TagSelectorProps> = ({
   }
 
   const triggerContent = useMemo(() => {
-    if (selectedTags?.length)
-      return selectedTags.map(tag => tag.name).join(', ')
-    return ''
-  }, [selectedTags])
+    if (!selectedTags?.length)
+      return ''
+    if (isFolder && selectedTags.length > 1)
+      return `${selectedTags[0].name} + ${selectedTags.length - 1}`
+    return selectedTags.map(tag => tag.name).join(', ')
+  }, [selectedTags, isFolder])
 
   const Trigger = () => {
     return (

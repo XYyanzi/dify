@@ -31,6 +31,7 @@ import DSLExportConfirmModal from '@/app/components/workflow/dsl-export-confirm-
 import { fetchWorkflowDraft } from '@/service/workflow'
 import { fetchInstalledAppList } from '@/service/explore'
 import { AppTypeIcon } from '@/app/components/app/type-selector'
+import type { UserProfileResponse } from '@/models/common'
 
 export type AppCardProps = {
   app: App
@@ -40,7 +41,7 @@ export type AppCardProps = {
 const AppCard = ({ app, onRefresh }: AppCardProps) => {
   const { t } = useTranslation()
   const { notify } = useContext(ToastContext)
-  const { isCurrentWorkspaceEditor } = useAppContext()
+  const { isCurrentWorkspaceEditor, isCurrentWorkspaceOwner, userProfile } = useAppContext()
   const { onPlanInfoChanged } = useProviderContext()
   const { push } = useRouter()
 
@@ -54,6 +55,33 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
   const [showSwitchModal, setShowSwitchModal] = useState<boolean>(false)
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const [secretEnvList, setSecretEnvList] = useState<EnvironmentVariable[]>([])
+  const [canEditApp, setCanEditApp] = useState<boolean>(true)
+
+  const checkCanEditApp = useCallback((app: App, userProfile: UserProfileResponse | null) => {
+    if (!userProfile) {
+      console.log('no userProfile')
+      setCanEditApp(false)
+      return
+    }
+    if (isCurrentWorkspaceOwner) {
+      setCanEditApp(true)
+      return
+    }
+    if (app.tags.length === 0) {
+      setCanEditApp(true)
+      return
+    }
+
+    const userTagIDs = userProfile.tags.map(tag => tag.id)
+    const appTagIDs = app.tags.map(tag => tag.id)
+
+    const canEdit = appTagIDs.some(tagID => userTagIDs.includes(tagID))
+    setCanEditApp(canEdit)
+  }, [isCurrentWorkspaceOwner])
+
+  useEffect(() => {
+    checkCanEditApp(app, userProfile)
+  }, [app, userProfile, checkCanEditApp])
 
   const onConfirmDelete = useCallback(async () => {
     try {
@@ -274,7 +302,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
       <div
         onClick={(e) => {
           e.preventDefault()
-          getRedirection(isCurrentWorkspaceEditor, app, push)
+          getRedirection(isCurrentWorkspaceEditor, app, push, canEditApp)
         }}
         className='relative h-[160px] group col-span-1 bg-components-card-bg border-[1px] border-solid border-components-card-border rounded-xl shadow-sm inline-flex flex-col transition-all duration-200 ease-in-out cursor-pointer hover:shadow-lg'
       >
