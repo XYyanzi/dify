@@ -59,8 +59,10 @@ const Apps = () => {
   const [activeTab, setActiveTab] = useTabSearchParams({
     defaultTab: 'all',
   })
+
   const { query: { tagIDs = userProfile.tags.map(tag => tag.id), keywords = '' }, setQuery } = useAppsQueryState()
   const [isCreatedByMe, setIsCreatedByMe] = useState(false)
+
   const [tagFilterValue, setTagFilterValue] = useState<string[]>(tagIDs)
   const [searchKeywords, setSearchKeywords] = useState(keywords)
   const setKeywords = useCallback((keywords: string) => {
@@ -126,6 +128,12 @@ const Apps = () => {
     handleTagsUpdate()
   }
 
+  const handleCreatedByMeChange = useCallback(() => {
+    const newValue = !isCreatedByMe
+    setIsCreatedByMe(newValue)
+    setQuery(prev => ({ ...prev, isCreatedByMe: newValue }))
+  }, [isCreatedByMe, setQuery])
+
   return (
     <>
       <div className='sticky top-0 flex justify-between items-center pt-4 px-12 pb-2 leading-[56px] bg-background-body z-10 flex-wrap gap-y-2'>
@@ -139,7 +147,7 @@ const Apps = () => {
             className='mr-2'
             label={t('app.showMyCreatedAppsOnly')}
             isChecked={isCreatedByMe}
-            onChange={() => setIsCreatedByMe(!isCreatedByMe)}
+            onChange={handleCreatedByMeChange}
           />
           <TagFilter type='app' value={tagFilterValue} onChange={handleTagsChange} />
           <Input

@@ -99,6 +99,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
       })
     }
     setShowConfirmDelete(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [app.id])
 
   const onEdit: CreateAppModalProps['onConfirm'] = useCallback(async ({
@@ -128,7 +129,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
         onRefresh()
       mutateApps()
     }
-    catch (e) {
+    catch {
       notify({ type: 'error', message: t('app.editFailed') })
     }
   }, [app.id, mutateApps, notify, onRefresh, t])
@@ -155,7 +156,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
       onPlanInfoChanged()
       getRedirection(isCurrentWorkspaceEditor, newApp, push)
     }
-    catch (e) {
+    catch {
       notify({ type: 'error', message: t('app.newApp.appCreateFailed') })
     }
   }
@@ -172,7 +173,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
       a.download = `${app.name}.yml`
       a.click()
     }
-    catch (e) {
+    catch {
       notify({ type: 'error', message: t('app.exportFailed') })
     }
   }
@@ -191,7 +192,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
       }
       setSecretEnvList(list)
     }
-    catch (e) {
+    catch {
       notify({ type: 'error', message: t('app.exportFailed') })
     }
   }
