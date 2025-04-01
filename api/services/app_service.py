@@ -58,7 +58,10 @@ class AppService:
                 return None
 
         app_models = db.paginate(
-            db.select(App).where(*filters).order_by(App.created_at.desc()),
+            db.select(App, Account.name.label('create_user_name'))
+            .join(Account, App.created_by == Account.id)
+            .where(*filters)
+            .order_by(App.created_at.desc()),
             page=args["page"],
             per_page=args["limit"],
             error_out=False,

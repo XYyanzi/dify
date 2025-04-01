@@ -359,6 +359,7 @@ export type App = {
     updated_at: number
     updated_by?: string
   }
+  create_user_name: string
 }
 
 export type AppSSO = {

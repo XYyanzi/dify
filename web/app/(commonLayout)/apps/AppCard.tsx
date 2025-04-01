@@ -328,6 +328,8 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
               {app.mode === 'agent-chat' && <div className='truncate'>{t('app.types.agent').toUpperCase()}</div>}
               {app.mode === 'workflow' && <div className='truncate'>{t('app.types.workflow').toUpperCase()}</div>}
               {app.mode === 'completion' && <div className='truncate'>{t('app.types.completion').toUpperCase()}</div>}
+              <div className='mx-1 w-[1px] h-[10px] bg-gray-200'></div>
+              <div className='truncate'>creator:  {app.create_user_name}</div>
             </div>
           </div>
         </div>
