@@ -331,6 +331,14 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
               <div className='mx-1 w-[1px] h-[10px] bg-gray-200'></div>
               <div className='truncate'>creator:  {app.create_user_name}</div>
             </div>
+            <div className='flex items-center text-[10px] leading-[18px] text-text-tertiary font-medium mt-1'>
+              {app.workflow?.marked_name && (
+                <div className='truncate'>version: {app.workflow.marked_name}</div>
+              )}
+              {!app.workflow?.marked_name && app.workflow?.version && (
+                <div className='truncate'>version: {app.workflow.version}</div>
+              )}
+            </div>
           </div>
         </div>
         <div className='title-wrapper h-[90px] px-[14px] text-xs leading-normal text-text-tertiary'>

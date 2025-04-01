@@ -358,8 +358,10 @@ export type App = {
     created_by?: string
     updated_at: number
     updated_by?: string
+    version: string
+    marked_name: string
   }
-  create_user_name: string
+  create_user_name: string,
 }
 
 export type AppSSO = {

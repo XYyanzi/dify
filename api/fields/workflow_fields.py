@@ -63,6 +63,8 @@ workflow_partial_fields = {
     "created_at": TimestampField,
     "updated_by": fields.String,
     "updated_at": TimestampField,
+    "marked_name": fields.String,
+    "version": fields.String,
 }
 
 workflow_pagination_fields = {
